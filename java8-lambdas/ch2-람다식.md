@@ -101,6 +101,7 @@ public interface ActionListener extends EventListener {
 
 ## 2.5 타입 인터페이스
 > 타입을 직접 제공해야 하는지 아닌지를 언제 알 수 있을까?
+
 예제 2.9 변수의 타입 추측을 위한 다이아몬드 연산자 사용 코드
 ``` c
 Map<String, Integer> oldWordCounts = new HashMap<String, Integer>();
