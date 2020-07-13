@@ -125,3 +125,34 @@
   1. 클래스는 인터페이스를 이긴다.
   2. 하위 클래스에 있는 구현이 상위 클래스의 구현보다 우선한다.
   3. 두 규칙에서 아무런 답도 찾지 못한다면 하위 클래스는 반드시 메소드를 구현하거나 abstract로 선언해야 한다.
+
+## Optional
+
+> null을 대신하기 위해 만들어진 새로운 코어 라이브러리 데이터 타입
+
+- null의 문제점
+
+  - null 값을 가진 변수를 참조했을 때 충돌이 발생
+  - NullPointerException
+
+- Optional의 목적
+  - 변수가 null 인지 확인하여 버그를 최대한 피함
+  - 클래스 API에 없다고 예상되는 값들을 기록하여 진자 구현 부분이 어디에 있는지 쉽게 찾게 함
+
+```java
+    Optional<String> a = Optional.of("a");
+
+    Optional emptyOptional = Optional.empty();
+    // ofNullable : null이 될 수 있는 값을 Optional로 변경
+    Optional alsoEmpty = Optional.ofNullable(null);
+
+    // isPresent : Optional에 값이 있는지 확인
+    // get()을 호출하는 것은 위험
+    assertFalse(emptyOptional.isPresent());
+    assertTrue(a.isPresnet());
+
+    // orElse : Optional이 비어 있을 때 대체 값을 줌
+    assertEquals("b", emptyOptional.orElse("b"));
+    // orElseGet : 대체값을 만들 때 성능에 부하에 생긴다면 orElseGet 메소드 사용
+    assertEquals("c", emptyOptional.orElseGet(() -> "c"));
+```
