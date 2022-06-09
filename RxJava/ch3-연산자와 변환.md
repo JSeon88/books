@@ -122,3 +122,40 @@ Observable이 다른 비동기 작업을 한다면 flatMap()을 개별 업스트
                         .map(x -> word))
 ```
 ### flatMap() 이후 이벤트 순서
+  - 부속 이벤트가 다운스트림 연산자/구독자에게 도달하는 순서를 보장할 수 없음.
+  ```java
+    Observable
+            .just(DayOfWeek.SUNDAY, DayOfWeek.MONDAY)
+            .flatMap(this::loadRecordsFor);
+
+    Observable<String> loadRecordsFor(DayOfWeek dow) {
+      switch(dow) {
+        case SUNDAY :
+          return Observable
+                          .interval(90, MILLISECONDS)
+                          .take(5)
+                          .map(i -> "Sun-" + i);
+        case MONDAY :
+          return Observable
+                          .interval(65, MILLISECONDS)
+                          .take(5)
+                          .map(i -> "Mon-" + i);
+      }
+    }
+
+    // Mon-0, Sun-0, Mon-1, Sun-1, Mon-2, Mon-3, Sun-2, Mon-4, Sun-3, Sun-4
+  ```
+    - 순서를 보장하고 싶다면 concatMap()을 사용하면 됨.
+
+### concatMap()으로 순서 유지하기
+  ```java
+    Observable
+            .just(DayOfWeek.SUNDAY, DayOfWeek.MONDAY)
+            .concatMap(this::loadRecordsFor);
+
+    // Sun-0, Sun-1, Sun-2, Sun-3, Sun-4, Mon-0, Mon-1, Mon-2, Mon-3, Mon-4
+  ```
+  - concatMap()은 어떠한 동시성 처리도 끌어들이지 않은 채 업스트림 이벤트의 순서를 유지하고 중첩을 피함.
+
+#### flatMap()의 동시성 제어
+  
